@@ -1,8 +1,8 @@
-# Descriptive-Semantic-Image-Translation-with-FlexIT
+# Descriptive Semantic Image Translation with FlexIT
 
-Using GANs to generate photorealistic images has become rather commonplace in computer vision. However, our control over diversity and features 
-of images is limited. Most recent research in image editing and semantic image translation improves architecture, replacing GANs with VQGAN autoencoders. 
-Given text about original features and target features, a newly proposed method, FlexIT, can perform transformations with minimal changes 
-and close resemblance to the input image. We will extend FlexIT to deal with more complicated textual descriptions it is not previously 
-capable of handling, such as transforming objects in the input image that are not the main object. More descriptive texts will be supported 
-to illustrate the input and target objects.
+This is the official implementation of Descriptive Semantic Image Translation with FlexIT.
+
+## Setup
+
+- Download `val2017.zip` from [COCO-Stuff](https://github.com/nightrome/cocostuff) and place the unzipped `val2017` directory into `data/cocostuff`.
+- Download `stuff_trainval2017.zip` and `annotations_trainval2017.zip` from [COCO-Stuff](https://github.com/nightrome/cocostuff), unzip, and place all the JSON files into `data/cocostuff/annotations`.
