@@ -19,11 +19,30 @@ stuff_val2017 = json.load(stuff_val2017_json)
 thing_annotations = thing_val2017['annotations']
 stuff_annotations = stuff_val2017['annotations']
 
-categories = thing_val2017['categories']
-categories.extend(stuff_val2017['categories'])
 
 
-# Dictionary mapping image_id to labels
+# Creates a dictionary mapping category ID to category name and supercategory
+# Examples of a key-value pair in dictionary:
+# {2: ['bicycle', 'vehicle]}
+# The key is 2, referring to the category ID.
+# The value is a list, where the first element is the category name, and
+# the second value is the supercategory.
+
+categories_raw = thing_val2017['categories']
+categories_raw.extend(stuff_val2017['categories'])
+categories = {}
+for category in categories_raw:
+    supercategory = category['supercategory']
+    category_id = category['id']
+    name = category['name']
+    
+    categories[category_id] = [name, supercategory]
+
+
+
+
+
+# Creates a dictionary mapping image_id to labels
 # Example of key-value pair in dictionary:
 # {12345: [
 #           [[121,200,345,109], 1],
@@ -34,7 +53,6 @@ categories.extend(stuff_val2017['categories'])
 # The value is a list of sub-lists.
 # The first element in the sub-list is the bounding box [xmin, ymin, width, height].
 # The second element in the sub-list is the class ID.
-
 
 if recompute_im2label:
     
@@ -131,4 +149,3 @@ def visualize(image_id, image_dir, im2label_dict):
     cv2.destroyAllWindows() 
 
 
-visualize('885', "data/cocostuff/val2017", im2label)
