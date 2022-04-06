@@ -46,4 +46,4 @@ root
 - Run `code/openie/openie.py` with `python3 openie.py IMAGE_ID.csv "description of the transform (e.g. the red hat on the cat next to the winder is replaced with an umbrella)"`. It will output a CSV with the first row indicating the subject (target object) instances and the second row indicating the object (desired transformed object) instances.
 
 ## Evaluation with LPIPS and SFID
-- Download `Evaluation_LPIPS_SFID.ipynb` and the `pytorch_sfid` directory and follow the instructions in the notebook. For SFID, regularization term alpha is set to 1.
+- Download `Evaluation_LPIPS_SFID.ipynb` and the `pytorch_sfid` directory and follow the instructions in the notebook. Make sure to clone `PerceptualSimilarity` into `root`.  For SFID, regularization term alpha is set to 1.
