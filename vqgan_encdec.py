@@ -7,6 +7,7 @@
 
 import numpy as np
 from omegaconf import OmegaConf
+import os
 import PIL
 from PIL import Image
 import torch
@@ -14,9 +15,9 @@ import torchvision.transforms as T
 import torchvision.transforms.functional as TF
 import yaml
 
-%cd taming-transformers
+os.chdir('taming-transformers')
 from taming.models.vqgan import VQModel, GumbelVQ
-
+os.chdir('..')
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -44,13 +45,11 @@ def preprocess_image(img, target_image_size=256):
     
     if s < target_image_size:
         raise ValueError(f'min dim for image {s} < {target_image_size}')
-        
-    r = target_image_size / s
-    s = (round(r * img.size[1]), round(r * img.size[0]))
-    img = TF.resize(img, s, interpolation=PIL.Image.LANCZOS)
-    img = TF.center_crop(img, output_size=2 * [target_image_size])
+    
+    img = TF.resize(img, (target_image_size, target_image_size), interpolation=PIL.Image.LANCZOS)
     img = torch.unsqueeze(T.ToTensor()(img), 0)
     return img
+
 
 def preprocess_vqgan(x):
     x = 2.*x - 1.
@@ -87,19 +86,29 @@ def load(config_path, ckpt_path):
         Pre-trained VQGAN conditional transformer model
     
     '''
+    os.chdir('taming-transformers')
+    
+    if config_path[0:20] == 'taming-transformers/':
+        config_path = config_path[20:]
+        
+    if ckpt_path[0:20] == 'taming-transformers/':
+        ckpt_path = ckpt_path[20:]
+    
     config = load_config(config_path, display=False)
     model = load_vqgan(config, ckpt_path=ckpt_path).to(device)
+    
+    os.chdir('..')
     return model
 
 
-def open_image_for_vqgan(img_path, size):
+def prep_image_for_vqgan(img, size = 256):
     '''
     Opens an image and preprocesses it to prepare for VQGAN encoding
 
     Parameters
     ----------
-    img_path : str
-        Path to image
+    img_path : PIL.Image.Image
+        Image
     size : int
         Target image size
 
@@ -108,32 +117,26 @@ def open_image_for_vqgan(img_path, size):
     None.
 
     '''
-    image = Image.open(img_path)
-    image = preprocess_image(image, size)
+    image = preprocess_image(img, size)
     image = preprocess_vqgan(image)
     return image
 
 
-model = load('logs/vqgan_imagenet_f16_1024/configs/model.yaml',
-             'logs/vqgan_imagenet_f16_1024/checkpoints/last.ckpt')
+def revert_size(img, orig_size):
+    '''
+    Rescale an image to i
 
+    Parameters
+    ----------
+    img : TYPE
+        DESCRIPTION.
+    orig_size : TYPE
+        DESCRIPTION.
 
-# Example image to pass through VQGAN
-image = open_image_for_vqgan('../data/cocostuff/val2017/000000000285.jpg', 320)
+    Returns
+    -------
+    None.
 
-# Result of image encoder to get z0
-z0, _, [_, _, indices] = model.encode(image)
-
-# AT THIS POINT IN CODE, MANIPULATE z0 TO TRANSLATE TOWARDS TARGET.
-
-# Result of image decoder
-decoded = model.decode(z0)
-decoded_image = custom_to_pil(decoded[0])
-
-
-
-
-
-
-
-%cd ..
+    '''
+    
+    
