@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 @author: peterliu
-edit: weiyuhuang
 """
 
 import cv2
@@ -9,16 +8,18 @@ import json
 import numpy as np
 import os
 
+# in the same directory as images, annotations of cocostuff
+# os.chdir('Documents/COMS4995/Project/dataset/cocostuff')
 
 # If loading pre-computed im2label JSON, set this to False.
 # To recompute, set to True.
 recompute_im2label = False
 
 # train2017
-thing_train2017_json = open('dataset/cocostuff/annotations/instances_train2017.json')
+thing_train2017_json = open('annotations/instances_train2017.json')
 thing_train2017 = json.load(thing_train2017_json)
 
-stuff_train2017_json = open('dataset/cocostuff/annotations/stuff_train2017.json')
+stuff_train2017_json = open('annotations/stuff_train2017.json')
 stuff_train2017 = json.load(stuff_train2017_json)
 
 train_thing_annotations = thing_train2017['annotations']
@@ -26,10 +27,10 @@ train_stuff_annotations = stuff_train2017['annotations']
 
 
 # val2017
-thing_val2017_json = open('dataset/cocostuff/annotations/instances_val2017.json')
+thing_val2017_json = open('annotations/instances_val2017.json')
 thing_val2017 = json.load(thing_val2017_json)
 
-stuff_val2017_json = open('dataset/cocostuff/annotations/stuff_val2017.json')
+stuff_val2017_json = open('annotations/stuff_val2017.json') 
 stuff_val2017 = json.load(stuff_val2017_json)
 
 val_thing_annotations = thing_val2017['annotations']
@@ -56,7 +57,7 @@ def category_dict(thing, stuff):
     
         categories[category_id] = [name, supercategory]
         
-    return categories
+    return categories 
  
 
 categories_train = category_dict(thing_train2017, stuff_train2017)
@@ -77,7 +78,7 @@ categories_val = category_dict(thing_val2017, stuff_val2017)
 # The second element in the sub-list is the class ID.
 
 def imageid_to_labels(recompute_im2label, thing_annotations, stuff_annotations, save_filename):
-    save_dir = os.path.join('dataset/cocostuff', save_filename + '_im2label.json')
+    save_dir = os.path.join(save_filename + '_im2label.json') 
     if recompute_im2label:
         im2label = {} 
         
@@ -121,7 +122,7 @@ def imageid_to_labels(recompute_im2label, thing_annotations, stuff_annotations, 
     else: 
         im2label = json.load(open(save_dir))  
         
-    return im2label
+    return im2label 
 
 
 train_im2label_dict = imageid_to_labels(recompute_im2label, train_thing_annotations, train_stuff_annotations, 'train2017')
@@ -157,13 +158,10 @@ def visualize(image_id, image_dir, im2label_dict):
     
     for label in im2label_dict[image_id]:
         bb = label[0]
-        xmin = bb[0]
-        ymin = bb[1]
-        width = bb[2]
-        height = bb[3]
+        xmin, ymin, width, height = bb 
         xmax = xmin + width
         ymax = ymin + height
-        
+         
         start_point = int(xmin), int(ymin)
         end_point = int(xmax), int(ymax)
         
@@ -173,5 +171,12 @@ def visualize(image_id, image_dir, im2label_dict):
         cv2.rectangle(image, start_point, end_point, color, thickness)
     
     cv2.imshow(filename, image)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows() 
+    
+    cv2.waitKey(0) 
+    cv2.destroyAllWindows()   
+     
+    
+
+visualize('30', 'images/train2017', train_im2label_dict) 
+
+ 
