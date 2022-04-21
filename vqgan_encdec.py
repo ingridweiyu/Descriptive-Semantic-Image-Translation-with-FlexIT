@@ -122,21 +122,3 @@ def prep_image_for_vqgan(img, size = 256):
     return image
 
 
-def revert_size(img, orig_size):
-    '''
-    Rescale an image to i
-
-    Parameters
-    ----------
-    img : TYPE
-        DESCRIPTION.
-    orig_size : TYPE
-        DESCRIPTION.
-
-    Returns
-    -------
-    None.
-
-    '''
-    
-    

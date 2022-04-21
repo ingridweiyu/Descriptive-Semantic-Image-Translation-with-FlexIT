@@ -1,40 +1,23 @@
-# -*- coding: utf-8 -*-
-"""
-@author: peterliu
-"""
-
 import cv2
 import json
 import numpy as np
 import os
 
-# in the same directory as images, annotations of cocostuff
-# os.chdir('Documents/COMS4995/Project/dataset/cocostuff')
 
 # If loading pre-computed im2label JSON, set this to False.
 # To recompute, set to True.
 recompute_im2label = False
 
-# train2017
-thing_train2017_json = open('annotations/instances_train2017.json')
-thing_train2017 = json.load(thing_train2017_json)
-
-stuff_train2017_json = open('annotations/stuff_train2017.json')
-stuff_train2017 = json.load(stuff_train2017_json)
-
-train_thing_annotations = thing_train2017['annotations']
-train_stuff_annotations = stuff_train2017['annotations']
 
 
-# val2017
-thing_val2017_json = open('annotations/instances_val2017.json')
+thing_val2017_json = open('data/cocostuff/annotations/instances_val2017.json')
 thing_val2017 = json.load(thing_val2017_json)
 
-stuff_val2017_json = open('annotations/stuff_val2017.json') 
+stuff_val2017_json = open('data/cocostuff/annotations/stuff_val2017.json')
 stuff_val2017 = json.load(stuff_val2017_json)
 
-val_thing_annotations = thing_val2017['annotations']
-val_stuff_annotations = stuff_val2017['annotations']
+thing_annotations = thing_val2017['annotations']
+stuff_annotations = stuff_val2017['annotations']
 
 
 
@@ -45,23 +28,17 @@ val_stuff_annotations = stuff_val2017['annotations']
 # The value is a list, where the first element is the category name, and
 # the second value is the supercategory.
 
-def category_dict(thing, stuff):
-    categories_raw = thing['categories']
-    categories_raw.extend(stuff['categories'])
-    categories = {}
+categories_raw = thing_val2017['categories']
+categories_raw.extend(stuff_val2017['categories'])
+categories = {}
+for category in categories_raw:
+    supercategory = category['supercategory']
+    category_id = category['id']
+    name = category['name']
     
-    for category in categories_raw: 
-        supercategory = category['supercategory']
-        category_id = category['id']
-        name = category['name']
-    
-        categories[category_id] = [name, supercategory]
-        
-    return categories 
- 
+    categories[category_id] = [name, supercategory]
 
-categories_train = category_dict(thing_train2017, stuff_train2017)
-categories_val = category_dict(thing_val2017, stuff_val2017)
+
 
 
 
@@ -77,73 +54,67 @@ categories_val = category_dict(thing_val2017, stuff_val2017)
 # The first element in the sub-list is the bounding box [xmin, ymin, width, height].
 # The second element in the sub-list is the class ID.
 
-def imageid_to_labels(recompute_im2label, thing_annotations, stuff_annotations, save_filename):
-    save_dir = os.path.join(save_filename + '_im2label.json') 
-    if recompute_im2label:
-        im2label = {} 
-        
-        i = 1
-        total = len(thing_annotations) 
-        for ann in thing_annotations: 
-            print("Thing annotation", i, "/", total)
-            image_id = str(ann['image_id'])
-            bbox = ann['bbox']
-            category_id = ann['category_id'] 
-            
-            try: 
-                label_list = im2label[image_id] 
-                label_list.append([bbox, category_id])
-            except KeyError: 
-                im2label[image_id] = [[bbox, category_id]]
-        
-            i += 1
-            
-        i = 1
-        total = len(stuff_annotations) 
-        for ann in stuff_annotations: 
-            print("Stuff annotation", i, "/", total) 
-            image_id = str(ann['image_id'])
-            bbox = ann['bbox']
-            category_id = ann['category_id'] 
-            
-            try:
-                label_list = im2label[image_id] 
-                label_list.append([bbox, category_id])
-            except KeyError: 
-                im2label[image_id] = [[bbox, category_id]]
-        
-            i += 1
+if recompute_im2label:
     
-        print('save to', save_dir)
-        os.makedirs(os.path.dirname(save_dir), exist_ok=True)
-        with open(save_dir, 'w') as f: 
-            json.dump(im2label, f)
-
-    else: 
-        im2label = json.load(open(save_dir))  
+    im2label = {}
+    i = 1
+    total = len(thing_annotations)
+    for ann in thing_annotations:
+        print("Thing annotation", i, "/", total)
+        image_id = str(ann['image_id'])
+        bbox = ann['bbox']
+        category_id = ann['category_id']
         
-    return im2label 
+        try:
+            label_list = im2label[image_id]
+            label_list.append([bbox, category_id])
+        except KeyError:
+            im2label[image_id] = [[bbox, category_id]]
+        
+        i += 1
+            
+    i = 1
+    total = len(stuff_annotations)
+    for ann in stuff_annotations:
+        print("Stuff annotation", i, "/", total)
+        image_id = str(ann['image_id'])
+        bbox = ann['bbox']
+        category_id = ann['category_id']
+        
+        try:
+            label_list = im2label[image_id]
+            label_list.append([bbox, category_id])
+        except KeyError:
+            im2label[image_id] = [[bbox, category_id]]
+        
+        i += 1
+    
+    with open('data/cocostuff/val2017_im2label.json', 'w') as f:
+        json.dump(im2label, f)
+
+else:
+    im2label = json.load(open('data/cocostuff/val2017_im2label.json'))
 
 
-train_im2label_dict = imageid_to_labels(recompute_im2label, train_thing_annotations, train_stuff_annotations, 'train2017')
-val_im2label_dict = imageid_to_labels(recompute_im2label, val_thing_annotations, val_stuff_annotations, 'val2017')
 
- 
 
 def visualize(image_id, image_dir, im2label_dict):
     '''
     Visualizes the image with bounding boxes of objects
+
     Parameters
     ----------
     image_id : str
         Image ID number
     image_dir : str
-        Path to directory containing image. Current directory is customized.
+        Path to directory containing image. Current directory is represented
+        by the empty string.
     im2label_dict : dict
         Dictionary mapping image_id to labels, where each label is a list of
         tuples. The first element of the tuple is a list of 4 coordinates
         representing the bounding box. The second element of the tuple is the
         class ID of the object.
+
     Returns
     -------
     None.
@@ -158,10 +129,13 @@ def visualize(image_id, image_dir, im2label_dict):
     
     for label in im2label_dict[image_id]:
         bb = label[0]
-        xmin, ymin, width, height = bb 
+        xmin = bb[0]
+        ymin = bb[1]
+        width = bb[2]
+        height = bb[3]
         xmax = xmin + width
         ymax = ymin + height
-         
+        
         start_point = int(xmin), int(ymin)
         end_point = int(xmax), int(ymax)
         
@@ -171,12 +145,7 @@ def visualize(image_id, image_dir, im2label_dict):
         cv2.rectangle(image, start_point, end_point, color, thickness)
     
     cv2.imshow(filename, image)
-    
-    cv2.waitKey(0) 
-    cv2.destroyAllWindows()   
-     
-    
+    cv2.waitKey(0)
+    cv2.destroyAllWindows() 
 
-visualize('30', 'images/train2017', train_im2label_dict) 
 
- 
