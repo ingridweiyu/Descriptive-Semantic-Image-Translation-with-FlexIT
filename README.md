@@ -7,16 +7,19 @@ This is the official implementation of Descriptive Semantic Image Translation wi
 ```
 root
 │   README.md
+|   main.py
+|   losses.py
+|   clip_embed.py
 |   coco.py
 │   get_coco_im2label.py
 |   vqgan_encdec.py
 |   Citations.txt
+|   Evaluation_LPIPS_SFID.ipynb
 └───code
     └───class_id_openie
         |   openie.py
         |   openie_sample-output.csv
     └───eval
-        |   Evaluation_LPIPS_SFID.ipynb
         └───pytorch_sfid
             |   __init__.py
             |   __main__.py
@@ -48,3 +51,9 @@ root
 
 ## Evaluation with LPIPS and SFID
 - Download the `pytorch_sfid` directory and follow the instructions in the notebook. For SFID, regularization term alpha is set to 1.
+
+# Run Main Code
+From `root`, enter the following command into Terminal.
+```
+python main.py
+```
