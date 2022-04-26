@@ -2,34 +2,6 @@
 
 This is the official implementation of Descriptive Semantic Image Translation with FlexIT.
 
-## Directory Structure
-
-```
-root
-│   README.md
-|   main.py
-|   losses.py
-|   clip_embed.py
-|   coco.py
-│   get_coco_im2label.py
-|   vqgan_encdec.py
-|   Citations.txt
-|   Evaluation_LPIPS_SFID.ipynb
-└───code
-    └───class_id_openie
-        |   openie.py
-        |   openie_sample-output.csv
-    └───eval
-        └───pytorch_sfid
-            |   __init__.py
-            |   __main__.py
-            |   inception.py
-            |   sfid_score.py
-└───data
-    └───cocostuff
-        |   val2017_im2label.json
-```
-
 ## Setup
 
 ### Data
