@@ -34,26 +34,32 @@ root
 
 ### Data
 
-- Download [COCO-Stuff] module, and create directories in Google Drive
-- Download `val2017.zip` from [COCO-Stuff](https://github.com/nightrome/cocostuff) and place the unzipped `val2017` directory into `data/cocostuff`.
-- Download `stuff_trainval2017.zip` and `annotations_trainval2017.zip` from [COCO-Stuff](https://github.com/nightrome/cocostuff), unzip, and place all the JSON files into `data/cocostuff/annotations`.
-- Download `Evaluation_LPIPS_SFID.ipynb` and follow instructions in the notebook to install. Make sure to clone `PerceptualSimilarity` into `root`.
+To obtain images for testing translation, please visit one of the following Google Drive links.
+- Small version (117.9 MB, 250 images): [Google Drive]()
+- Large version (2.4 GB, 5000 images): [Google Drive]()
 
-### VQGAN
+### FlexIT
 
-- In `root`, run `git clone https://github.com/CompVis/taming-transformers`. 
-- Download [pre-trained VQGAN](https://heibox.uni-heidelberg.de/f/140747ba53464f49b476/?dl=1) and the corresponding [configuration file](https://heibox.uni-heidelberg.de/f/6ecf2af6c658432c8298/?dl=1).
-   - Place the pre-trained VQGAN `last.ckpt` into `taming-transformers/logs/vqgan_imagenet_f16_1024/checkpoints` and create these directories.
-   - Place the corresponding configuration file `model.yaml` into `taming-transformers/logs/vqgan_imagenet_f16_1024/configs`.
+FlexIT requires setup before it can function properly. After cloning our GitHub repository, unzip `FlexIT.zip`, and enter the commands:
+```
+pip install -r requirements.txt
+bash install.sh
+```
+When running the code, additional `ModuleNotFoundError`s may occur. Simply download the necessary package as indicated by each error message.
 
-## Natural language object detection using Stanford OpenIE:
-- Run `code/openie/openie.py` with `python3 openie.py IMAGE_ID.csv "description of the transform (e.g. the red hat on the cat next to the winder is replaced with an umbrella)"`. It will output a CSV with the first row indicating the subject (target object) instances and the second row indicating the object (desired transformed object) instances.
+The VQGAN component of FlexIT relies on two files which FlexIT incorrectly obtains. This will cause two error messages, respectively related to files called `model.yaml` and `last.ckpt`. You'll need to download these two files manually from:
+- https://heibox.uni-heidelberg.de/f/140747ba53464f49b476/?dl=1
+- https://heibox.uni-heidelberg.de/f/6ecf2af6c658432c8298/?dl=1
+Place these two files in the cache location as indicated by the above referenced error message.
 
-## Evaluation with LPIPS and SFID
-- Download the `pytorch_sfid` directory and follow the instructions in the notebook. For SFID, regularization term alpha is set to 1.
+Unfortunately, these problems are beyond our control, as FlexIT is one component of our final architecture that we did not implement ourselves. For more information on diverse usages of FlexIT, visit their [GitHub repository](https://github.com/facebookresearch/SemanticImageTranslation).
 
-# Run Main Code
+
+# Run Code
 From `root`, enter the following command into Terminal.
 ```
 python main.py
 ```
+
+# Credits
+
