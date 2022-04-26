@@ -36,7 +36,7 @@ root
 
 To obtain images for testing translation, please visit one of the following Google Drive links.
 - Small version (117.9 MB, 250 images): [Google Drive](https://drive.google.com/drive/folders/1vO0P1uS0ylmLfytLZeonX5YG7MmyKd1k?usp=sharing)
-- Large version (2.4 GB, 5000 images): [Google Drive]()
+- Large version (2.4 GB, 5000 images): [Google Drive](https://drive.google.com/drive/folders/1WbaB7ev09Z7pLM4ZKcZjd9WFNMPMQG8R?usp=sharing)
 
 Please the downloaded directory under this repository's root directory and rename the folder to `data_png`.
 
@@ -80,4 +80,4 @@ python dsit-eval.py
 - `taming` was automatically generated from code that we did not write.
 - `mdetr.py` was derived from [MDETR's Python notebook](https://colab.research.google.com/github/ashkamath/mdetr/blob/colab/notebooks/MDETR_demo.ipynb). We adapted their code only slightly.
 
-There is more code we wrote as part of this project's process which are not included in this repository. We wrote this code to manually implement FlexIT, before we adopted their official implementation.
+There is [more code](https://drive.google.com/file/d/1M5fKv621kRHFX5BoEHG9IYH_tHwsxLz1/view?usp=sharing) we wrote as part of this project's process which are not included in this repository. We wrote this to manually implement FlexIT, before we adopted their official implementation. Running them as-is will not work without complex dependencies, but we wanted to make them available to demonstrate our process.
