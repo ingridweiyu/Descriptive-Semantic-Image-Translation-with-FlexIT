@@ -6,11 +6,11 @@ This is the official implementation of Descriptive Semantic Image Translation wi
 
 ### Data
 
-To obtain images for testing translation, please visit one of the following Google Drive links.
+To obtain images for testing translation, please visit one of the following Google Drive links. The images in the large version contains all images in the small version.
 - Small version (117.9 MB, 250 images): [Google Drive](https://drive.google.com/drive/folders/1vO0P1uS0ylmLfytLZeonX5YG7MmyKd1k?usp=sharing)
 - Large version (2.4 GB, 5000 images): [Google Drive](https://drive.google.com/drive/folders/1WbaB7ev09Z7pLM4ZKcZjd9WFNMPMQG8R?usp=sharing)
 
-Please the downloaded directory under this repository's root directory and rename the folder to `data_png`.
+Place the downloaded directory under this repository's root directory and rename the folder to `data_png`.
 
 ### FlexIT
 
